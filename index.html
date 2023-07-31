@@ -20,7 +20,9 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .button-grid {
@@ -54,7 +56,14 @@
             margin-bottom: 10px;
             overflow: hidden;
             white-space: nowrap;
-            width: 210px;
+            width: auto;
+            max-width: 100%;
+            box-sizing: border-box;
+            word-break: break-all;
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
         }
     </style>
 </head>
@@ -107,6 +116,42 @@
                 document.getElementById('output').innerText = 'Error';
             }
         }
+
+        // Event listener for keyboard input
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            const keyCode = event.keyCode || event.which; // For cross-browser compatibility
+
+            // Check if the key is a number, operator, or a special key (e.g., Backspace, Enter, Esc)
+            if (/^[0-9\/*\-+.=\r\n]$/.test(key) || keyCode === 8 || keyCode === 13 || keyCode === 27) {
+                event.preventDefault();
+
+                // Call the appropriate function based on the key pressed
+                switch (key) {
+                    case 'C':
+                        clearOutput();
+                        break;
+                    case '\r':
+                    case '=':
+                    case 'Enter':
+                        calculate();
+                        break;
+                    case '\n':
+                        // Prevent Enter from creating a new line in the display area
+                        break;
+                    case '\b':
+                    case 'Backspace':
+                        deleteChar();
+                        break;
+                    case 'Escape':
+                        clearOutput();
+                        break;
+                    default:
+                        appendChar(key);
+                        break;
+                }
+            }
+        });
     </script>
 </body>
 </html>
